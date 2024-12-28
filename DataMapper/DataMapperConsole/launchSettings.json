@@ -1,0 +1,24 @@
+{
+    "configurations": [
+      {
+        "type": "coreclr",
+        "request": "launch",
+        "name": "Launch DataMapperConsole",
+        "program": "${workspaceFolder}/DataMapperConsole/bin/Debug/net9.0/DataMapperConsole.dll",
+        "preLaunchTask": "build"
+      }
+    ],
+    "inputs": [],
+    "tasks": [
+      {
+        "label": "build",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/DataMapperConsole/DataMapperConsole.csproj"
+        ],
+        "problemMatcher": "$msCompile"
+      }
+    ]
+  }
