@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 
 namespace dottech.data;
 
@@ -20,10 +21,14 @@ public static class DataExtensions
                         : default(T);
     }
 */
-    public static string GetString(this DataRow row, string name)
+    public static string GetString<T>(this T row, string name) where T : DataRow
     {
         return row.GetValue(name)?.ToString() ?? string.Empty;
     }
+    // public static string GetString(this DataRow row, string name)
+    // {
+    //     return row.GetValue(name)?.ToString() ?? string.Empty;
+    // }
     public static int? GetInt(this DataRow row, string name)
     {
         return Convert.ToInt32(row.GetValue(name));
