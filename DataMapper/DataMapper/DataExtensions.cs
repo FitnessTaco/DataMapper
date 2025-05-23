@@ -35,7 +35,7 @@ public static class DataExtensions
         if (value == null) return null;
         return Convert.ToInt32(value);
     }
-        public static int? GetIntOrDefault(this DataRow row, string name, int defaultValue = default(int))
+    public static int? GetIntOrDefault(this DataRow row, string name, int defaultValue = default(int))
     {
         var value = row.GetValue(name);
         if (value == null) return defaultValue;
