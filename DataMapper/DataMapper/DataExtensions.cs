@@ -6,21 +6,22 @@ namespace dottech.data;
 
 public static class DataExtensions
 {
+    // test comment
  /*   public static string GetString(this DataRow row, string name)
-    {
-        if (row == null) return string.Empty;
-        if (!row.Table.Columns.Contains(name)) return string.Empty;
-        if (row[name] == DBNull.Value || row[name] == null) return string.Empty;
-        return row[name].ToString();
-        
-    }
-        public static T? Get<T>(this DataRow row, string name)
-    {
-        return row != null && row.Table.Columns.Contains(name) && row[name] != DBNull.Value && row[name] != null
-            ?  row[name]
-                        : default(T);
-    }
-*/
+       {
+           if (row == null) return string.Empty;
+           if (!row.Table.Columns.Contains(name)) return string.Empty;
+           if (row[name] == DBNull.Value || row[name] == null) return string.Empty;
+           return row[name].ToString();
+
+       }
+           public static T? Get<T>(this DataRow row, string name)
+       {
+           return row != null && row.Table.Columns.Contains(name) && row[name] != DBNull.Value && row[name] != null
+               ?  row[name]
+                           : default(T);
+       }
+   */
     public static string GetString<T>(this T row, string name) where T : DataRow
     {
         return row.GetValue(name)?.ToString() ?? string.Empty;
@@ -33,7 +34,7 @@ public static class DataExtensions
     {
         var value = row.GetValue(name);
         if (value == null) return null;
-        return Convert.ToInt32(value);
+        return  Convert.ToInt32(value);
     }
     public static int? GetIntOrDefault(this DataRow row, string name, int defaultValue = default(int))
     {
