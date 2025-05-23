@@ -31,23 +31,39 @@ public static class DataExtensions
     // }
     public static int? GetInt(this DataRow row, string name)
     {
-        return Convert.ToInt32(row.GetValue(name));
+        var value = row.GetValue(name);
+        if (value == null) return null;
+        return Convert.ToInt32(value);
+    }
+        public static int? GetIntOrDefault(this DataRow row, string name, int defaultValue = default(int))
+    {
+        var value = row.GetValue(name);
+        if (value == null) return defaultValue;
+        return Convert.ToInt32(value);
     }
     public static double? GetDouble(this DataRow row, string name)
     {
-        return Convert.ToDouble(row.GetValue(name));
+        var value = row.GetValue(name);
+        if (value == null) return null;
+        return Convert.ToDouble(value);
     }  
     public static decimal? GetDecimal(this DataRow row, string name)
     {
-        return Convert.ToDecimal(row.GetValue(name));
+        var value = row.GetValue(name);
+        if (value == null) return null;
+        return Convert.ToDecimal(value);
     }     
     public static DateTime? GetDate(this DataRow row, string name)
     {
-        return Convert.ToDateTime(row.GetValue(name));
+        var value = row.GetValue(name);
+        if (value == null) return null;
+        return Convert.ToDateTime(value);
     } 
     public static bool? GetBool(this DataRow row, string name)
     {
-        return Convert.ToBoolean(row.GetValue(name));
+        var value = row.GetValue(name);
+        if (value == null) return null;
+        return Convert.ToBoolean(value);
     } 
     private static object? GetValue(this DataRow row, string name)
     {
