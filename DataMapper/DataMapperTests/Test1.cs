@@ -49,18 +49,39 @@ public sealed class Test1
         // null strings should return empty string
         Assert.AreEqual(string.Empty, table.Rows[0].GetString("Id"));
     }
-    
-    
+
+
     [TestMethod]
     public void TestDataRowExtensionsDefaultNullValues()
     {
         // build a data table
         var table = GetSampleDataTable();
         // add a row with data
-        table.Rows.Add(null, null, null);
 
         Assert.AreEqual(default(int), table.Rows[0].GetIntOrDefault("Id"));
         Assert.AreEqual(5, table.Rows[0].GetIntOrDefault("Id", 5));
+
+    }
+    
+        [TestMethod]
+    public void TestDataRowExtensionGeneric()
+    {
+        // build a data table
+        var table = GetSampleDataTable();
+        table.Columns.Add("BoolString", typeof(string));
+        // add a row with data
+        // add a row with data
+        var value1 = 1;
+        var value2 = DateTime.Now;
+        var value3 = true;
+        table.Rows.Add(value1, value2, value3, true.ToString());
+
+
+        Assert.AreEqual(value1, table.Rows[0].GetValue<int>("Id"));
         
+        Assert.AreEqual(value2, table.Rows[0].GetValue<DateTime>("DateCreated"));
+        Assert.AreEqual(DateOnly.FromDateTime(value2), table.Rows[0].GetValue<DateOnly>("DateCreated"));
+        Assert.AreEqual(value3, table.Rows[0].GetValue<bool>("IsActivew"));
+        Assert.AreEqual(true, table.Rows[0].GetValue<bool>("BoolString"));
     }
 }

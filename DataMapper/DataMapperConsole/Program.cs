@@ -12,7 +12,6 @@ table.Columns.Add("IsActivew", typeof(bool));
 table.Rows.Add(1, DateTime.Now, true);    
 
 var result = table.Rows[0].GetString("Id");
-
 Console.WriteLine($"GetString result: {result}");
 Console.WriteLine($"GetInt result: {table.Rows[0].GetInt("Id")}");
 Console.WriteLine($"GetDouble result: {table.Rows[0].GetDouble("Id")}");
