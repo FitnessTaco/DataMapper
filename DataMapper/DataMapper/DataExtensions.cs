@@ -74,12 +74,37 @@ public static class DataExtensions
             : null;
     }
 
-    public static T? GetValue<T>(this DataRow row, string name) where T : struct
+    public static struct GetValue(this DataRow row, string name)
+    {
+        
+    }
+    public static T? GetValue<T>(this DataRow row, string name, T? prototype = null) where T : struct
     {
         if (row == null || !row.Table.Columns.Contains(name)) return null;
         var value = row[name];
         if (value == null || value == DBNull.Value) return null;
-        return (T)System.Convert.ChangeType(value, typeof(T)); 
-    
+        // check for conversions between datetime and dateonly
+        if (typeof(T) == typeof(DateOnly) && value is DateTime dateTime)
+        {
+            return (T)(object)DateOnly.FromDateTime(dateTime);
+        }
+        // check for conversions between dateonly and datetime
+        if (typeof(T) == typeof(DateTime) && value is DateOnly dateOnly)
+        {
+            return (T)(object)dateOnly.ToDateTime(TimeOnly.MinValue);
+        }
+        // check for conversions to Enum from int or string
+        if (typeof(T).IsEnum && value is int intValue)
+        {
+            return (T)Enum.ToObject(typeof(T), intValue);
+        }
+        // check for conversions to Enum values
+        if (typeof(T).IsEnum && value is string strValue)
+        {
+            return (T)Enum.Parse(typeof(T), strValue, true);
+        }
+
+        return (T)System.Convert.ChangeType(value, typeof(T));
+
     }
 }

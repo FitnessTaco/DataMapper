@@ -11,4 +11,14 @@ public class SampleClass
     public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    [MapTo("SampleEnum")]
+    public SampleEnum SampleEnumValue { get; set; }
+}
+
+public enum SampleEnum
+{
+    Value1,
+    Value2,
+    Value3
 }

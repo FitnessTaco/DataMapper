@@ -26,6 +26,27 @@ namespace DataMapper;
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    public class MapToEnum : MapTo
+    {
+
+        public StoreEnumAs StoreAs { get; set; } = StoreEnumAs.String;
+        public MapToEnum(string name) : base(name)
+        {
+
+        }
+        public MapToEnum(string name, StoreEnumAs value) : base(name)
+        {
+        StoreAs = value;
+        }
+    }
+
+    public enum StoreEnumAs
+    {
+        String,
+        Integer
+    }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class DataIgnoreMap : Attribute{}
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]

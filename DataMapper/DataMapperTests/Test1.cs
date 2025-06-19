@@ -56,7 +56,8 @@ public sealed class Test1
     {
         // build a data table
         var table = GetSampleDataTable();
-        // add a row with data
+         // add a row with data
+        table.Rows.Add(DBNull.Value); ;
 
         Assert.AreEqual(default(int), table.Rows[0].GetIntOrDefault("Id"));
         Assert.AreEqual(5, table.Rows[0].GetIntOrDefault("Id", 5));
