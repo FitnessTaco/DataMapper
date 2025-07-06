@@ -74,11 +74,8 @@ public static class DataExtensions
             : null;
     }
 
-    public static struct GetValue(this DataRow row, string name)
-    {
-        
-    }
-    public static T? GetValue<T>(this DataRow row, string name, T? prototype = null) where T : struct
+
+    public static T? GetValueOf<T>(this DataRow row, string name, T? prototype = null) where T : struct
     {
         if (row == null || !row.Table.Columns.Contains(name)) return null;
         var value = row[name];
@@ -107,4 +104,5 @@ public static class DataExtensions
         return (T)System.Convert.ChangeType(value, typeof(T));
 
     }
+    
 }

@@ -1,5 +1,6 @@
 
 
+using System.Configuration.Assemblies;
 using System.Data;
 using System.Reflection;
 using DataMapper;
@@ -36,40 +37,74 @@ public class Mapper
                     // call row.GetValue<T>(columnName) to get the value
                     // and set the value to the property
                     // if the property is a nullable type, we need to check for DBNull
-                    if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    switch (prop.PropertyType)
                     {
-                        // Get the underlying type of the nullable type
-                        var underlyingType = Nullable.GetUnderlyingType(prop.PropertyType); 
-             
-                        var value = row.GetValue<T>(columnName);
-                        if (value != DBNull.Value)
-                        {
-                            prop.SetValue(obj, Convert.ChangeType(value, underlyingType));
-                        }
+                        case Type t when t == typeof(string):
+                            // For string properties, we can directly set the value
+                            var stringValue = row.GetString(columnName);
+                            CheckThrowIfNull(stringValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, stringValue);
+                            break;
+
+                        case Type t when t == typeof(int):
+                            // For int properties, we can directly set the value
+                            var intValue = row.GetInt(columnName);
+                            CheckThrowIfNull(intValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, intValue);
+                            break;
+
+                        case Type t when t == typeof(double):
+                            // For double properties, we can directly set the value
+                            var dblValue = row.GetDouble(columnName);
+                            CheckThrowIfNull(dblValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, dblValue);
+                            break;
+                        // decimal
+                        case Type t when t == typeof(decimal):
+                            // For decimal properties, we can directly set the value
+                            var decimalValue = row.GetDecimal(columnName);
+                            CheckThrowIfNull(decimalValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, decimalValue);
+                            break;
+
+                        case Type t when t == typeof(bool):
+                            // For bool properties, we can directly set the value
+                            var boolValue = row.GetBool(columnName);
+                            CheckThrowIfNull(boolValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, boolValue);
+                            break;
+
+                        case Type t when t == typeof(DateTime):
+                            // For DateTime properties, we can directly set the value
+                            var dateTimeValue = row.GetDate(columnName);
+                            CheckThrowIfNull(dateTimeValue, prop.PropertyType, columnName);
+                            prop.SetValue(obj, dateTimeValue);
+                            break;
+
+                        case Type t when t.IsEnum:
+                            // For Enum properties, we can directly set the value
+                            // var enumValue = row.GetEnum(columnName, prop.PropertyType);
+                            // CheckThrowIfNull(enumValue, prop.PropertyType, columnName);
+                            // prop.SetValue(obj, enumValue);
+                            break;
+
+                        default:
+                            throw new NotImplementedException($"Property type {prop.PropertyType.Name} is not implemented for mapping column {columnName}.");
                     }
-                    else
-                    {
-                        // For non-nullable types, we can directly set the value
-                        var value = row.GetValue(prop.PropertyType, columnName);
-                        if (value != DBNull.Value)
-                        {
-                            prop.SetValue(obj, Convert.ChangeType(value, prop.PropertyType));
-                        }
-                    }
-                    // get the type of the property
-                    /*
-                    var t = prop.PropertyType;
-                    var value = row.GetValue<typeof(t)>(columnName);
-                    //var value = row[columnName];
-                    if (value != DBNull.Value)
-                    {
-                        prop.SetValue(obj, Convert.ChangeType(value, prop.PropertyType));
-                    }
-                    */
+               
                 }
             }
         }
 
         return obj;
+    }
+    
+    private static void CheckThrowIfNull(object? value, Type type, string columnName)
+    {
+        if (value == null || value == DBNull.Value)
+        {
+            throw new ArgumentNullException(nameof(value), $"The value for type column {columnName} cannot be null or DBNull.");
+        }
+
     }
 }

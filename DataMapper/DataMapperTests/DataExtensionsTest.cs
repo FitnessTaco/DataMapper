@@ -4,7 +4,7 @@ using dottech.data;
 namespace DataMapperTests;
 
 [TestClass]
-public sealed class Test1
+public sealed class DataExtensionsTest
 {
     private DataTable GetSampleDataTable()
     {
@@ -64,7 +64,7 @@ public sealed class Test1
 
     }
     
-        [TestMethod]
+    [TestMethod]
     public void TestDataRowExtensionGeneric()
     {
         // build a data table
@@ -78,11 +78,11 @@ public sealed class Test1
         table.Rows.Add(value1, value2, value3, true.ToString());
 
 
-        Assert.AreEqual(value1, table.Rows[0].GetValue<int>("Id"));
+        Assert.AreEqual(value1, table.Rows[0].GetValueOf<int>("Id"));
         
-        Assert.AreEqual(value2, table.Rows[0].GetValue<DateTime>("DateCreated"));
-        Assert.AreEqual(DateOnly.FromDateTime(value2), table.Rows[0].GetValue<DateOnly>("DateCreated"));
-        Assert.AreEqual(value3, table.Rows[0].GetValue<bool>("IsActivew"));
-        Assert.AreEqual(true, table.Rows[0].GetValue<bool>("BoolString"));
+        Assert.AreEqual(value2, table.Rows[0].GetValueOf<DateTime>("DateCreated"));
+        Assert.AreEqual(DateOnly.FromDateTime(value2), table.Rows[0].GetValueOf<DateOnly>("DateCreated"));
+        Assert.AreEqual(value3, table.Rows[0].GetValueOf<bool>("IsActivew"));
+        Assert.AreEqual(true, table.Rows[0].GetValueOf<bool>("BoolString"));
     }
 }
