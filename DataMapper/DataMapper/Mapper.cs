@@ -52,12 +52,26 @@ public class Mapper
                             CheckThrowIfNull(intValue, prop.PropertyType, columnName);
                             prop.SetValue(obj, intValue);
                             break;
+                        case Type t when t == typeof(int?):
+                            // For int properties, we can directly set the value
+                            var intValue2 = row.GetInt(columnName);
+                            if (intValue2.HasValue)
+                                prop.SetValue(obj, intValue2);
+                            break;
 
                         case Type t when t == typeof(double):
                             // For double properties, we can directly set the value
                             var dblValue = row.GetDouble(columnName);
                             CheckThrowIfNull(dblValue, prop.PropertyType, columnName);
                             prop.SetValue(obj, dblValue);
+                            break;
+                            
+                        case Type t when t == typeof(double?):
+                            // For double properties, we can directly set the value
+                            var dblValue2 = row.GetDouble(columnName);
+                            CheckThrowIfNull(dblValue2, prop.PropertyType, columnName);
+                            if (dblValue2.HasValue)
+                                prop.SetValue(obj, dblValue2);
                             break;
                         // decimal
                         case Type t when t == typeof(decimal):
@@ -66,12 +80,26 @@ public class Mapper
                             CheckThrowIfNull(decimalValue, prop.PropertyType, columnName);
                             prop.SetValue(obj, decimalValue);
                             break;
-
+                        case Type t when t == typeof(decimal?):
+                            // For decimal properties, we can directly set the value
+                            var decimalValue2 = row.GetDecimal(columnName);
+                            CheckThrowIfNull(decimalValue2, prop.PropertyType, columnName);
+                            if (decimalValue2.HasValue)
+                                prop.SetValue(obj, decimalValue2);
+                            break;
+        
                         case Type t when t == typeof(bool):
                             // For bool properties, we can directly set the value
                             var boolValue = row.GetBool(columnName);
                             CheckThrowIfNull(boolValue, prop.PropertyType, columnName);
                             prop.SetValue(obj, boolValue);
+                            break;
+
+                        case Type t when t == typeof(bool?):
+                            // For bool properties, we can directly set the value
+                            var boolValue2 = row.GetBool(columnName);
+                            if (boolValue2.HasValue)
+                                prop.SetValue(obj, boolValue2);
                             break;
 
                         case Type t when t == typeof(DateTime):
@@ -81,11 +109,20 @@ public class Mapper
                             prop.SetValue(obj, dateTimeValue);
                             break;
 
+                        case Type t when t == typeof(DateTime):
+                            // For DateTime properties, we can directly set the value
+                            var dateTimeValue2 = row.GetDate(columnName);
+                            if (dateTimeValue2.HasValue)
+                                prop.SetValue(obj, dateTimeValue2);
+                            break;
+
+
                         case Type t when t.IsEnum:
                             // For Enum properties, we can directly set the value
-                            // var enumValue = row.GetEnum(columnName, prop.PropertyType);
-                            // CheckThrowIfNull(enumValue, prop.PropertyType, columnName);
-                            // prop.SetValue(obj, enumValue);
+                             var enumValue = row.GetEnum(columnName, prop.PropertyType);
+                             CheckThrowIfNull(enumValue, prop.PropertyType, columnName);
+                            if (enumValue != null)
+                                prop.SetValue(obj, enumValue);
                             break;
 
                         default:
@@ -98,6 +135,8 @@ public class Mapper
 
         return obj;
     }
+
+
     
     private static void CheckThrowIfNull(object? value, Type type, string columnName)
     {
@@ -105,6 +144,5 @@ public class Mapper
         {
             throw new ArgumentNullException(nameof(value), $"The value for type column {columnName} cannot be null or DBNull.");
         }
-
     }
 }

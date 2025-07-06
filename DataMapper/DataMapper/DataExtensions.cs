@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
+using Microsoft.VisualBasic;
 
 namespace dottech.data;
 
@@ -27,10 +28,7 @@ public static class DataExtensions
     {
         return row.GetValue(name)?.ToString() ?? string.Empty;
     }
-    // public static string GetString(this DataRow row, string name)
-    // {
-    //     return row.GetValue(name)?.ToString() ?? string.Empty;
-    // }
+
     public static int? GetInt(this DataRow row, string name)
     {
         var value = row.GetValue(name);
@@ -74,6 +72,51 @@ public static class DataExtensions
             : null;
     }
 
+    // public static T GetEnum<T>(this DataRow row, string name) where T : Enum
+    // {
+    //     var value = row.GetValue(name);
+    //     CheckThrowIfNull(value, typeof(T), name);
+    //     if (value is int intValue)
+    //     {
+    //         return (T)value;  
+    //     }
+    //     if (value is string strValue)
+    //     {
+    //         return (T)Enum.Parse(typeof(T), strValue, true);
+    //     }
+    //     throw new InvalidCastException($"Cannot convert {value!.GetType()} to {typeof(T)}");
+    // }
+    public static Enum? GetNullableEnum(this DataRow row, string name) 
+    {
+        var value = row.GetValue(name);
+        if (value == null || value == DBNull.Value) return default(Enum);
+        if (value is int intValue)
+        {
+            
+            return (Enum)value;
+           // var v2 = (System.Enum)System.Enum.Parse(typeof(T), Convert.ToInt32(value).ToString());
+            // var v = Enum.ToObject(typeof(T), value); 
+            // return (T)Enum.ToObject(typeof(T), value);  
+        }
+        if (value is string strValue)
+        {
+            //return (T)Enum.Parse(typeof(T), strValue, true);
+        }
+        throw new InvalidCastException($"Cannot convert {value.GetType()} to {typeof(Enum)}");
+    }
+
+        public static T? GetEnum<T>(this DataRow row, string fieldName) where T : struct, Enum
+		{
+            return (T?)GetEnum(row, fieldName, typeof(T));
+		}
+
+        
+        public static Enum? GetEnum(this DataRow row, string fieldName, Type enumType) 
+		{
+            var v = row.GetString(fieldName);
+            if (v == null || v == string.Empty) return null;
+            return System.Enum.Parse(enumType, v) as Enum;            
+		}
 
     public static T? GetValueOf<T>(this DataRow row, string name, T? prototype = null) where T : struct
     {
@@ -103,6 +146,14 @@ public static class DataExtensions
 
         return (T)System.Convert.ChangeType(value, typeof(T));
 
+    }
+
+    private static void CheckThrowIfNull(object? value, Type type, string columnName)
+    {
+        if (value == null || value == DBNull.Value)
+        {
+            throw new ArgumentNullException(nameof(value), $"The value for type column {columnName} cannot be null or DBNull.");
+        }
     }
     
 }

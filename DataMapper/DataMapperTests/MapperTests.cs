@@ -40,7 +40,7 @@ public sealed class MapperTests
         Assert.AreEqual(value2, obj.IsActive);
         Assert.AreEqual(value3, obj.Name);
         Assert.AreEqual(value4, obj.Description);
-        //Assert.AreEqual(value5, obj.SampleEnumValue);
+        Assert.AreEqual(value5, obj.SampleEnumValue);
         Assert.AreEqual(value6, obj.CreatedAt);
         Assert.AreEqual(value7, obj.UpdatedAt);
     }
