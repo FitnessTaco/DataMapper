@@ -44,4 +44,24 @@ public sealed class MapperTests
         Assert.AreEqual(value6, obj.CreatedAt);
         Assert.AreEqual(value7, obj.UpdatedAt);
     }
+
+[TestMethod]
+    public void TestMapperWithDataIgnore()
+    {
+        // build a data table
+        var table = new DataTable();
+        table.Columns.Add("Id", typeof(int));
+        table.Columns.Add("IgnoredProperty", typeof(string));
+        // add a row with data
+        var value1 = 1;
+        var value2 = "map me";
+        table.Rows.Add(value1, value2);
+
+        // map the row to an object
+        var obj = Mapper.Map<DataIgnore>(table.Rows[0]);
+        Assert.AreEqual(value1, obj.Id);
+        Assert.AreNotEqual(value2, obj.IgnoredProperty); // Ignored property should not be set
+    }
+
+
 }
